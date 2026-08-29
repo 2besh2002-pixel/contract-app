@@ -172,17 +172,29 @@
                     @endforelse
 
                     <article
-                        class="flex gap-4 rounded-xl border border-emerald-200 border-r-4 border-r-emerald-700 bg-emerald-50/50 p-4 sm:p-5">
+                        class="flex gap-4 rounded-xl border border-emerald-200 border-r-4 border-r-emerald-700 bg-emerald-50/50 p-4 sm:p-5 transition hover:bg-emerald-100/50">
                         <div class="min-w-0 flex-1">
-                            <h2 class="mb-2 text-lg font-extrabold text-emerald-900">
-                                بند الإلتزامات المالية
-                            </h2>
-                            <div class="mt-2">
-                                <input id="price" name="price" type="number" step="0.01" min="0"
-                                    value="{{ optional(($contractTypes ?? collect())->first())->price ?? 0 }}"
-                                    readonly
-                                    class="w-full rounded-lg border border-emerald-300 bg-emerald-100 px-2 py-2 text-center font-black text-emerald-950 outline-none">
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                                <h2 class="obligation-label text-lg font-extrabold text-emerald-900">
+                                    بند الإلتزامات المالية
+                                </h2>
+                                <div class="obligation-type inline-flex items-center rounded-lg bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                                    حق عقود
+                                </div>
                             </div>
+                            
+                            <div class="obligation-amount-box flex items-center justify-between rounded-xl border border-emerald-300 bg-emerald-100/70 px-4 py-3 sm:px-5 sm:py-3.5">
+                                <span class="amount-label text-sm font-bold text-emerald-800">المبلغ المستحق:</span>
+                                <div class="flex items-baseline gap-1.5">
+                                    <span class="amount-value text-xl font-black text-emerald-950">
+                                        {{ number_format(optional(($contractTypes ?? collect())->first())->price ?? 0, 2) }}
+                                    </span>
+                                    <span class="currency text-xs font-bold text-emerald-700">ر.س</span>
+                                </div>
+                            </div>
+
+                            <input id="price" name="price" type="hidden"
+                                value="{{ optional(($contractTypes ?? collect())->first())->price ?? 0 }}">
                         </div>
                     </article>
                 </div>
@@ -310,9 +322,16 @@
                 date.setFullYear(date.getFullYear() + 1);
                 endDate.value = date.toISOString().split('T')[0];
             };
+            const amountValueDisplay = document.querySelector('.amount-value');
             const updateContractType = () => {
                 const option = contractType.options[contractType.selectedIndex];
-                price.value = Number(option?.dataset.price || 0).toFixed(2);
+                const rawPrice = Number(option?.dataset.price || 0);
+                if (price) {
+                    price.value = rawPrice.toFixed(2);
+                }
+                if (amountValueDisplay) {
+                    amountValueDisplay.textContent = rawPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
                 if (contractTypeDisplay && option) {
                     contractTypeDisplay.textContent = option.text.trim();
                 }
