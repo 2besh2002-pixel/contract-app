@@ -22,10 +22,18 @@ class ContractController extends Controller
 {
     public function create()
     {
-        $company = Company::first();
-        $contractTerms = ContractTerm::orderBy('id')->get();
-        $client = Client::where('name', 'شركة العمارة الزرقاء المحدودة')->first();
-        $contractTypes = Schema::hasTable('contract_types') ? ContractType::all() : collect();
+        try {
+            $company = Company::first();
+            $contractTerms = ContractTerm::orderBy('id')->get();
+            $client = Client::where('name', 'شركة العمارة الزرقاء المحدودة')->first();
+            $contractTypes = Schema::hasTable('contract_types') ? ContractType::all() : collect();
+        } catch (\Throwable $e) {
+            report($e);
+            $company = null;
+            $contractTerms = collect();
+            $client = null;
+            $contractTypes = collect();
+        }
 
         return view('contracts.create', [
             'company' => $company,

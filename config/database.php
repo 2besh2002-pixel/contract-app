@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,11 +47,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', env('BS_DB_HOST', 'db65876.public.databaseasp.net')),
+            'port' => env('DB_PORT', env('BS_DB_PORT', '3306')),
+            'database' => env('DB_DATABASE', env('BS_DB_DATABASE', env('DB_BUSINESS_DATABASE', 'db65876'))),
+            'username' => env('DB_USERNAME', env('BS_DB_USERNAME', env('DB_JOBS_USERNAME', 'db65876'))),
+            'password' => env('DB_PASSWORD', env('BS_DB_PASSWORD', env('DB_JOBS_PASSWORD', ''))),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
@@ -60,6 +60,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::ATTR_TIMEOUT => 5,
                 (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],

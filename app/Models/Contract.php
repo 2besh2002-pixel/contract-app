@@ -10,15 +10,19 @@ class Contract extends Model
     public static function generateNextContractNumber(): string
     {
         $year = now()->year;
-        $sequence = static::where('contract_number', 'like', "CNT-{$year}-%")
-            ->count() + 1;
+        try {
+            $sequence = static::where('contract_number', 'like', "CNT-{$year}-%")
+                ->count() + 1;
 
-        do {
-            $contractNumber = sprintf('CNT-%d-%04d', $year, $sequence);
-            $sequence++;
-        } while (static::where('contract_number', $contractNumber)->exists());
+            do {
+                $contractNumber = sprintf('CNT-%d-%04d', $year, $sequence);
+                $sequence++;
+            } while (static::where('contract_number', $contractNumber)->exists());
 
-        return $contractNumber;
+            return $contractNumber;
+        } catch (\Throwable $e) {
+            return sprintf('CNT-%d-0001', $year);
+        }
     }
 
     protected $fillable = [

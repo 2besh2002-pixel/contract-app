@@ -24,6 +24,11 @@ class clients extends Seeder
             ],
         ];
 
-        DB::table('clients')->insert($clients);
+        foreach ($clients as $client) {
+            DB::table('clients')->updateOrInsert(
+                ['commercial_registration' => $client['commercial_registration']],
+                $client
+            );
+        }
     }
 }
