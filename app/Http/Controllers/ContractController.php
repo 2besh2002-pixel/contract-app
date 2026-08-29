@@ -48,6 +48,16 @@ class ContractController extends Controller
     }
     public function store(Request $request)
     {
+        if ($request->has('start_date')) {
+            $request->merge(['start_date' => convertArabicToEnglishNumbers($request->input('start_date'))]);
+        }
+        if ($request->has('end_date')) {
+            $request->merge(['end_date' => convertArabicToEnglishNumbers($request->input('end_date'))]);
+        }
+        if ($request->has('duration_years')) {
+            $request->merge(['duration_years' => convertArabicToEnglishNumbers($request->input('duration_years'))]);
+        }
+
         $data = $request->validate([
             'contract_type_id' => ['required', 'exists:contract_types,id'],
             'start_date' => ['required', 'date'],
@@ -172,6 +182,19 @@ class ContractController extends Controller
      */
     public function verifyOTP(Request $request, Client $client)
     {
+        if ($request->has('otp_code')) {
+            $request->merge(['otp_code' => convertArabicToEnglishNumbers($request->input('otp_code'))]);
+        }
+        if ($request->has('start_date')) {
+            $request->merge(['start_date' => convertArabicToEnglishNumbers($request->input('start_date'))]);
+        }
+        if ($request->has('end_date')) {
+            $request->merge(['end_date' => convertArabicToEnglishNumbers($request->input('end_date'))]);
+        }
+        if ($request->has('duration_years')) {
+            $request->merge(['duration_years' => convertArabicToEnglishNumbers($request->input('duration_years'))]);
+        }
+
         // Validate input with type checking
         $validated = $request->validate([
             'otp_code' => [

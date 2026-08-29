@@ -13,3 +13,16 @@
     --font-sans: 'Cairo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+input[type="date"],
+.en-numbers,
+.date-input {
+    direction: ltr !important;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "numr" 0, "tnum" 1;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+    text-align: center;
+}

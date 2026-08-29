@@ -9,9 +9,17 @@ class ContractTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        ContractType::query()->firstOrCreate(
-            ['name' => 'سنوي'],
-            ['price' => 2500.00]
-        );
+        $types = [
+            ['name' => 'عقد استشارات',    'price' => 1500.00],
+            ['name' => 'عقد خدمة محددة', 'price' => 2000.00],
+            ['name' => 'عقد سنوي',        'price' => 2500.00],
+        ];
+
+        foreach ($types as $type) {
+            ContractType::query()->firstOrCreate(
+                ['name' => $type['name']],
+                ['price' => $type['price']]
+            );
+        }
     }
 }

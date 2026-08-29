@@ -23,3 +23,23 @@ if (!function_exists('maskPhone')) {
         return '****';
     }
 }
+
+if (!function_exists('convertArabicToEnglishNumbers')) {
+    /**
+     * Convert Eastern Arabic (Hindi) and Persian numerals to Western Arabic (English) numerals.
+     *
+     * @param string|null $string
+     * @return string|null
+     */
+    function convertArabicToEnglishNumbers(?string $string): ?string
+    {
+        if ($string === null) {
+            return null;
+        }
+
+        $easternArabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $westernArabic = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        return str_replace($easternArabic, $westernArabic, $string);
+    }
+}

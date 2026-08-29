@@ -12,6 +12,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        input[type="date"],
+        .en-numbers,
+        .date-input {
+            direction: ltr !important;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "numr" 0, "tnum" 1;
+        }
+        /* إجبار التقويم الميلادي دائماً */
+        input[type="date"] {
+            -webkit-locale: "en-US";
+            calendar: gregory;
+        }
+        input[type="date"]::-webkit-datetime-edit {
+            direction: ltr !important;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body class="min-h-screen bg-emerald-50/40 font-sans text-emerald-950">
@@ -57,7 +78,7 @@
                                     class="w-24 sm:w-28 rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-xs font-semibold text-emerald-950 outline-none transition focus:border-emerald-500 focus:ring-1 focus:ring-emerald-400">
                                     @foreach ($contractTypes ?? [] as $type)
                                         <option value="{{ $type->id }}" data-price="{{ $type->price }}">
-                                            {{ $type->name }}
+                                             {{ $type->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -66,29 +87,31 @@
                             <div class="flex flex-col gap-1">
                                 <span class="text-[11px] font-bold text-emerald-700 whitespace-nowrap">المدة (السنوات)</span>
                                 <input id="duration_years" name="duration_years" type="number" value="1"
-                                    min="1" readonly
-                                    class="w-16 sm:w-20 rounded-lg border border-emerald-200 bg-emerald-100/70 px-2 py-1.5 text-center text-xs font-extrabold text-emerald-900 outline-none">
+                                    min="1" readonly lang="en-US" dir="ltr"
+                                    class="en-numbers w-16 sm:w-20 rounded-lg border border-emerald-200 bg-emerald-100/70 px-2 py-1.5 text-center text-xs font-extrabold text-emerald-900 outline-none [direction:ltr]">
                             </div>
 
                             <div class="flex flex-col gap-1">
                                 <span class="text-[11px] font-bold text-emerald-700 whitespace-nowrap">بداية العقد</span>
                                 <input id="start_date" name="start_date" type="date"
+                                    lang="en-US" dir="ltr" data-calendar="gregory"
                                     value="{{ $defaultStartDate ?? now()->toDateString() }}" required
-                                    class="w-32 sm:w-34 rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-xs font-semibold text-emerald-950 outline-none transition focus:border-emerald-500 focus:ring-1 focus:ring-emerald-400">
+                                    class="date-input en-numbers w-32 sm:w-34 rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-center text-xs font-semibold text-emerald-950 outline-none transition focus:border-emerald-500 focus:ring-1 focus:ring-emerald-400 [direction:ltr]">
                             </div>
 
                             <div class="flex flex-col gap-1">
                                 <span class="text-[11px] font-bold text-emerald-700 whitespace-nowrap">نهاية العقد</span>
                                 <input id="end_date" name="end_date" type="date"
+                                    lang="en-US" dir="ltr" data-calendar="gregory"
                                     value="{{ $defaultEndDate ?? now()->addYear()->toDateString() }}" required
-                                    class="w-32 sm:w-34 rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-xs font-semibold text-emerald-950 outline-none transition focus:border-emerald-500 focus:ring-1 focus:ring-emerald-400">
+                                    class="date-input en-numbers w-32 sm:w-34 rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-center text-xs font-semibold text-emerald-950 outline-none transition focus:border-emerald-500 focus:ring-1 focus:ring-emerald-400 [direction:ltr]">
                             </div>
 
                             <div class="flex flex-col gap-1">
                                 <span class="text-[11px] font-bold text-emerald-700 whitespace-nowrap">رقم العقد</span>
-                                <input id="contract_number" type="text"
+                                <input id="contract_number" type="text" lang="en-US" dir="ltr"
                                     value="{{ App\Models\Contract::generateNextContractNumber() }}" readonly
-                                    class="w-28 sm:w-32 rounded-lg border border-emerald-200 bg-emerald-100/70 px-2 py-1.5 text-center text-xs font-extrabold text-emerald-900 outline-none">
+                                    class="en-numbers w-28 sm:w-32 rounded-lg border border-emerald-200 bg-emerald-100/70 px-2 py-1.5 text-center text-xs font-extrabold text-emerald-900 outline-none [direction:ltr]">
                             </div>
 
                         </div>
@@ -272,11 +295,11 @@
                         <dl class="space-y-3 text-sm">
                             <div class="flex justify-between gap-4">
                                 <dt class="font-bold text-emerald-700">رقم العقد</dt>
-                                <dd class="font-semibold text-emerald-950">{{ App\Models\Contract::generateNextContractNumber() }}</dd>
+                                <dd class="en-numbers font-semibold text-emerald-950" dir="ltr">{{ App\Models\Contract::generateNextContractNumber() }}</dd>
                             </div>
                             <div class="flex justify-between gap-4">
                                 <dt class="font-bold text-emerald-700">تاريخ الإنشاء</dt>
-                                <dd class="font-semibold text-emerald-950">{{ now()->format('Y/m/d') }}</dd>
+                                <dd class="en-numbers font-semibold text-emerald-950" dir="ltr">{{ now()->format('Y-m-d') }}</dd>
                             </div>
                         </dl>
                     </div>
@@ -316,12 +339,38 @@
             const contractTypeDisplay = document.getElementById('contract_type_display');
             const price = document.getElementById('price');
             const tableBody = document.getElementById('attachmentsTableBody');
+
+            const toEnglishDigits = (str) => {
+                if (!str) return str;
+                const easternArabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                const westernArabic = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                return str.replace(/[٠-٩۰-۹]/g, d => westernArabic[easternArabic.indexOf(d)]);
+            };
+
             const updateEndDate = () => {
                 if (!startDate.value) return;
-                const date = new Date(startDate.value + 'T00:00:00');
-                date.setFullYear(date.getFullYear() + 1);
-                endDate.value = date.toISOString().split('T')[0];
+                const normalizedStart = toEnglishDigits(startDate.value);
+                const date = new Date(normalizedStart + 'T00:00:00');
+                if (!isNaN(date.getTime())) {
+                    date.setFullYear(date.getFullYear() + 1);
+                    endDate.value = date.toISOString().split('T')[0];
+                }
             };
+
+            startDate.addEventListener('input', (e) => {
+                const val = toEnglishDigits(e.target.value);
+                if (val !== e.target.value) {
+                    e.target.value = val;
+                }
+            });
+
+            endDate.addEventListener('input', (e) => {
+                const val = toEnglishDigits(e.target.value);
+                if (val !== e.target.value) {
+                    e.target.value = val;
+                }
+            });
+
             const amountValueDisplay = document.querySelector('.amount-value');
             const updateContractType = () => {
                 const option = contractType.options[contractType.selectedIndex];
@@ -352,8 +401,9 @@
                 const row = document.createElement('tr');
                 row.className = 'border-t border-emerald-200 bg-white';
                 row.dataset.type = input.dataset.type;
+                const todayFormatted = new Date().toISOString().split('T')[0];
                 row.innerHTML =
-                    `<td class="px-4 py-3 font-semibold text-emerald-950">${file.name}</td><td class="px-4 py-3 text-emerald-700">${input.parentElement.querySelector('span:nth-child(2)').textContent}</td><td class="px-4 py-3 text-emerald-600">${new Date().toLocaleDateString('ar-SA')}</td><td class="px-4 py-3 font-bold text-emerald-900">${(file.size / 1024 / 1024).toFixed(2)} MB</td><td class="px-4 py-3"><button type="button" class="remove-file font-bold text-red-600 hover:text-red-800 transition">حذف</button></td>`;
+                    `<td class="px-4 py-3 font-semibold text-emerald-950">${file.name}</td><td class="px-4 py-3 text-emerald-700">${input.parentElement.querySelector('span:nth-child(2)').textContent}</td><td class="en-numbers px-4 py-3 text-emerald-600" dir="ltr">${todayFormatted}</td><td class="en-numbers px-4 py-3 font-bold text-emerald-900" dir="ltr">${(file.size / 1024 / 1024).toFixed(2)} MB</td><td class="px-4 py-3"><button type="button" class="remove-file font-bold text-red-600 hover:text-red-800 transition">حذف</button></td>`;
                 tableBody.appendChild(row);
                 row.querySelector('.remove-file').addEventListener('click', () => {
                     input.value = '';
