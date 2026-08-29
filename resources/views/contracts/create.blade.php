@@ -34,60 +34,60 @@
 
             <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <header
-                    class="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 px-5 py-6 sm:px-8 sm:py-8">
-                    <div class="flex flex-col items-stretch gap-4 lg:flex-row lg:justify-evenly">
+                    class="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50/50 px-4 py-4 sm:px-6 sm:py-5">
+                    <div class="flex flex-col-reverse items-center justify-between gap-4 md:flex-row">
 
+                        <!-- Contract Details Box -->
                         <div
-                            class="order-1 flex h-32 w-full shrink-0 items-center justify-center p-0 sm:h-32 lg:h-36 lg:w-52">
-                            <img class="h-full w-full object-contain" src="{{ asset('images/new-logo1.png') }}"
-                                alt="أمر تم">
+                            class="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/60 p-2.5 shadow-sm sm:gap-2.5 sm:p-3">
+
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">نوع العقد</span>
+                                <select id="contract_type_id" name="contract_type_id" required
+                                    class="w-24 sm:w-28 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-800 outline-none transition focus:border-slate-500 focus:ring-1 focus:ring-slate-200">
+                                    @foreach ($contractTypes ?? [] as $type)
+                                        <option value="{{ $type->id }}" data-price="{{ $type->price }}">
+                                            {{ $type->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">المدة (السنوات)</span>
+                                <input id="duration_years" name="duration_years" type="number" value="1"
+                                    min="1" readonly
+                                    class="w-16 sm:w-20 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1.5 text-center text-xs font-extrabold text-slate-800 outline-none">
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">بداية العقد</span>
+                                <input id="start_date" name="start_date" type="date"
+                                    value="{{ $defaultStartDate ?? now()->toDateString() }}" required
+                                    class="w-32 sm:w-34 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 outline-none transition focus:border-slate-500 focus:ring-1 focus:ring-slate-200">
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">نهاية العقد</span>
+                                <input id="end_date" name="end_date" type="date"
+                                    value="{{ $defaultEndDate ?? now()->addYear()->toDateString() }}" required
+                                    class="w-32 sm:w-34 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 outline-none transition focus:border-slate-500 focus:ring-1 focus:ring-slate-200">
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">رقم العقد</span>
+                                <input id="contract_number" type="text"
+                                    value="{{ App\Models\Contract::generateNextContractNumber() }}" readonly
+                                    class="w-28 sm:w-32 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1.5 text-center text-xs font-extrabold text-slate-800 outline-none">
+                            </div>
+
                         </div>
 
+                        <!-- Logo -->
                         <div
-                            class="order-2 flex min-w-0 flex-1 items-center rounded-2xl border border-slate-200 px-4 py-3 shadow-sm sm:h-32 lg:h-36">
-                            <div class="grid w-fit grid-cols-3 sm:grid-cols-5 gap-x-3 gap-y-2 text-[11px] bg-red-300">
-
-                                <div class="flex flex-col gap-1 bg-amber-900 w-fit">
-                                    <span class="font-bold text-slate-500 whitespace-nowrap">نوع العقد</span>
-                                    <select id="contract_type_id" name="contract_type_id" required
-                                        class="w-24 rounded-lg border border-slate-200 bg-white px-1.5 py-2 text-right text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200">
-                                        @foreach ($contractTypes ?? [] as $type)
-                                            <option value="{{ $type->id }}" data-price="{{ $type->price }}">
-                                                {{ $type->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="flex flex-col gap-1 bg-amber-900 w-fit">
-                                    <span class="font-bold text-slate-500 whitespace-nowrap">المدة (السنوات)</span>
-                                    <input id="duration_years" name="duration_years" type="number" value="1"
-                                        min="1" readonly
-                                        class="w-24 rounded-lg border border-slate-200 bg-slate-100 px-1.5 py-2 text-center font-extrabold text-slate-800 outline-none">
-                                </div>
-
-                                <div class="flex flex-col gap-1 bg-amber-500 w-fit">
-                                    <span class="font-bold text-slate-500 whitespace-nowrap">بداية العقد</span>
-                                    <input id="start_date" name="start_date" type="date"
-                                        value="{{ $defaultStartDate ?? now()->toDateString() }}" required
-                                        class="w-35 rounded-lg border border-slate-200 bg-white px-1.5 py-2 text-slate-700 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200">
-                                </div>
-
-                                <div class="flex flex-col gap-1 bg-amber-400 w-fit">
-                                    <span class="font-bold text-slate-500 whitespace-nowrap">نهاية العقد</span>
-                                    <input id="end_date" name="end_date" type="date"
-                                        value="{{ $defaultEndDate ?? now()->addYear()->toDateString() }}" required
-                                        class="w-35 rounded-lg border border-slate-200 bg-white px-1.5 py-2 text-slate-700 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200">
-                                </div>
-
-                                <div class="flex flex-col gap-1 bg-amber-100 w-fit">
-                                    <span class="font-bold text-slate-500 whitespace-nowrap">رقم العقد</span>
-                                    <input id="contract_number" type="text"
-                                        value="{{ App\Models\Contract::generateNextContractNumber() }}" readonly
-                                        class="w-full rounded-lg border border-slate-200 bg-slate-100 px-1.5 py-2 text-center font-extrabold text-slate-800 outline-none">
-                                </div>
-
-                            </div>
+                            class="flex h-16 w-36 shrink-0 items-center justify-center sm:h-20 sm:w-48">
+                            <img class="h-full w-full object-contain" src="{{ asset('images/new-logo1.png') }}"
+                                alt="أمر تم">
                         </div>
 
                     </div>
