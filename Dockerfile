@@ -80,9 +80,11 @@ RUN chown -R www-data:www-data /var/www/html \
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expose port (use PORT env variable for cloud platforms)
-EXPOSE 80
+# Default port for Render (overridden by Render's $PORT env var)
+ENV PORT=10000
+EXPOSE 10000
 
 # Use entrypoint script
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
+
