@@ -102,7 +102,7 @@
                 <header
                     class="flex items-center justify-center border-b border-emerald-900 bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-800 px-5 py-4 sm:px-7">
                     <div>
-                        <h2 class="text-xl font-extrabold text-white">عقد سنوي إلكتروني</h2>
+                        <h2 class="text-xl font-extrabold text-white">عقد <span id="contract_type_display">{{ optional(($contractTypes ?? collect())->first())->name ?? 'سنوي' }}</span> إلكتروني</h2>
                     </div>
                 </header>
 
@@ -301,6 +301,7 @@
             const startDate = document.getElementById('start_date');
             const endDate = document.getElementById('end_date');
             const contractType = document.getElementById('contract_type_id');
+            const contractTypeDisplay = document.getElementById('contract_type_display');
             const price = document.getElementById('price');
             const tableBody = document.getElementById('attachmentsTableBody');
             const updateEndDate = () => {
@@ -309,13 +310,16 @@
                 date.setFullYear(date.getFullYear() + 1);
                 endDate.value = date.toISOString().split('T')[0];
             };
-            const updatePrice = () => {
+            const updateContractType = () => {
                 const option = contractType.options[contractType.selectedIndex];
                 price.value = Number(option?.dataset.price || 0).toFixed(2);
+                if (contractTypeDisplay && option) {
+                    contractTypeDisplay.textContent = option.text.trim();
+                }
             };
             startDate.addEventListener('change', updateEndDate);
-            contractType.addEventListener('change', updatePrice);
-            updatePrice();
+            contractType.addEventListener('change', updateContractType);
+            updateContractType();
             document.querySelectorAll('.attachment-input').forEach(input => input.addEventListener('change', () => {
                 const file = input.files[0];
                 if (!file) return;
