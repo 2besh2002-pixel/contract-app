@@ -33,6 +33,15 @@ if [[ "$DB_HOST" == *".databaseasp.net" ]] && [[ "$DB_HOST" != *".public."* ]]; 
     export DB_HOST="${DB_HOST/.databaseasp.net/.public.databaseasp.net}"
 fi
 
+# Ensure HTTPS APP_URL for Render production
+if [ -n "$RENDER_EXTERNAL_URL" ]; then
+    export APP_URL="$RENDER_EXTERNAL_URL"
+    export ASSET_URL="$RENDER_EXTERNAL_URL"
+elif [ -z "$APP_URL" ] || [ "$APP_URL" = "http://localhost" ]; then
+    export APP_URL="https://contract-app-1.onrender.com"
+    export ASSET_URL="https://contract-app-1.onrender.com"
+fi
+
 # Generate app key if not set
 php artisan key:generate --force 2>/dev/null || true
 
