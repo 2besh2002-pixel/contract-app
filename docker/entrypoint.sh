@@ -49,15 +49,19 @@ php artisan config:cache 2>/dev/null || true
 php artisan route:cache 2>/dev/null || true
 php artisan view:cache 2>/dev/null || true
 
-# Run migrations & seeders (don't block startup if DB is unavailable)
-echo "==> Running migrations & seeders..."
-php artisan migrate --force 2>/dev/null && php artisan db:seed --force 2>/dev/null || echo "==> WARNING: Migrations/Seeders failed, skipping..."
-
 # Create storage link if not exists
 php artisan storage:link 2>/dev/null || true
 
 # Fix permissions
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache 2>/dev/null || true
+
+# Run migrations & seeders in background so Apache port opens immediately (avoids 502 Bad Gateway)
+(
+    sleep 1
+    echo "==> Running migrations & seeders in background..."
+    php artisan migrate --force --no-interaction 2>/dev/null && php artisan db:seed --force --no-interaction 2>/dev/null || echo "==> WARNING: Migrations/Seeders failed or DB unreachable, skipping..."
+) &
 
 echo "==> Starting Apache on port ${PORT:-80}..."
 exec "$@"
