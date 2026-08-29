@@ -7,50 +7,59 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    use HasFactory;
+    public static function generateNextContractNumber(): string
+    {
+        $year = now()->year;
+        $sequence = static::where('contract_number', 'like', "CNT-{$year}-%")
+            ->count() + 1;
+
+        do {
+            $contractNumber = sprintf('CNT-%d-%04d', $year, $sequence);
+            $sequence++;
+        } while (static::where('contract_number', $contractNumber)->exists());
+
+        return $contractNumber;
+    }
 
     protected $fillable = [
         'contract_number',
+        'first_party_id',
+        'second_party_id',
+        'contract_type_id',
+        'duration_years',
         'start_date',
         'end_date',
-        'duration_years',
-        'contract_type_id',
+        'terms',
+        'status',
+        'payment_status',
         'price',
+        'signature_status',
+        'signed_at',
     ];
 
     protected $casts = [
-        'start_date' => 'date:Y-m-d',
-        'end_date' => 'date:Y-m-d',
-        'price' => 'decimal:2',
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'signed_at' => 'datetime',
     ];
+
+    public function firstParty()
+    {
+        return $this->belongsTo(Company::class, 'first_party_id');
+    }
+
+    public function secondParty()
+    {
+        return $this->belongsTo(Client::class, 'second_party_id');
+    }
 
     public function contractType()
     {
-        return $this->belongsTo(ContractType::class);
+        return $this->belongsTo(ContractType::class, 'contract_type_id');
     }
 
-    public static function generateNextContractNumber(): string
+    public function attachments()
     {
-        $year = now()->format('Y');
-        $lastContract = self::orderByDesc('id')->first();
-
-        if (! $lastContract || empty($lastContract->contract_number)) {
-            return 'CNT-' . $year . '-' . '0001';
-        }
-
-        preg_match('/^CNT-(\d{4})-(\d+)$/', $lastContract->contract_number, $matches);
-
-        if (! $matches) {
-            return 'CNT-' . $year . '-' . '0001';
-        }
-
-        $lastYear = $matches[1];
-        $lastSequence = (int) $matches[2];
-
-        if ((int) $year !== (int) $lastYear) {
-            return 'CNT-' . $year . '-' . '0001';
-        }
-
-        return 'CNT-' . $year . '-' . str_pad((string) ($lastSequence + 1), 4, '0', STR_PAD_LEFT);
+        return $this->hasMany(ContractAttachment::class);
     }
 }

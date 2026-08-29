@@ -39,6 +39,19 @@ class Client extends Model
 
     public function verifyOTP(string $otp): bool
     {
+        $otp = strtr(trim($otp), [
+            '٠' => '0',
+            '١' => '1',
+            '٢' => '2',
+            '٣' => '3',
+            '٤' => '4',
+            '٥' => '5',
+            '٦' => '6',
+            '٧' => '7',
+            '٨' => '8',
+            '٩' => '9',
+        ]);
+
         if (!$this->otp_code || !$this->otp_expires_at) {
             return false;
         }
@@ -47,6 +60,10 @@ class Client extends Model
             return false;
         }
 
-        return $this->otp_code === $otp;
+        return (string) $this->otp_code === $otp;
+    }
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class, 'second_party_id');
     }
 }

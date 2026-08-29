@@ -1,35 +1,25 @@
 <?php
 
 use App\Http\Controllers\ContractController;
-use App\Models\Clause;
 use App\Models\Company;
 use App\Models\ContractType;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\ClientController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/contract-form', function () {
-    $company = Company::first();
-    $clauses = Clause::orderBy('order')->get();
-    $contractTypes = Schema::hasTable('contract_types') ? ContractType::all() : collect();
-
-    return view('contracts.create', [
-        'company' => $company,
-        'contract' => null,
-        'clauses' => $clauses,
-        'contractTypes' => $contractTypes,
-        'defaultStartDate' => now()->toDateString(),
-        'defaultEndDate' => now()->addYear()->toDateString(),
-    ]);
-})->name('contracts.create');
-
 Route::post('/contracts', [ContractController::class, 'store'])->name('contracts.store');
-Route::post('/clients', [\App\Http\Controllers\ClientController::class, 'store']);
+Route::post('/contracts/{contract}/attachments', [ContractController::class, 'uploadAttachments'])
+    ->name('contracts.attachments.store');
+Route::get('/clients', [ClientController::class, 'store']);
 
 // Signature verification routes
 Route::get('/client/{client}/signature-verification', [ContractController::class, 'showSignatureVerification'])->name('client.signature-verification');
 Route::post('/client/{client}/verify-otp', [ContractController::class, 'verifyOTP'])->name('client.verify-otp');
 Route::post('/client/{client}/resend-otp', [ContractController::class, 'resendOTP'])->name('client.resend-otp');
+
+Route::get('/contract-form', [ContractController::class, 'create'])->name('contracts.create');
+Route::get('/contracts/create', [ContractController::class, 'create'])->name('contracts.create.form');

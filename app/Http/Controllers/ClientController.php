@@ -11,8 +11,15 @@ class ClientController extends Controller
     {
         // Validate input with strict type checking
         $validated = $request->validate([
+            'client_id' => [
+                'nullable',
+                'exists:clients,id'
+            ],
+            'terms_consent' => [
+                'accepted'
+            ],
             'name' => [
-                'required',
+                'required_without:client_id',
                 'string',
                 'min:3',
                 'max:255'
@@ -30,7 +37,7 @@ class ClientController extends Controller
                 'max:255'
             ],
             'email' => [
-                'nullable',
+                'required_without:client_id',
                 'email',
                 'max:255'
             ],
@@ -51,9 +58,20 @@ class ClientController extends Controller
             'commercial_registration.min' => 'رقم السجل التجاري يجب أن يكون 5 أحرف على الأقل',
             'address.min' => 'العنوان يجب أن يكون 5 أحرف على الأقل',
             'email.email' => 'البريد الإلكتروني غير صحيح',
+            'email.required' => 'البريد الإلكتروني مطلوب لإرسال رمز التحقق',
             'phone.regex' => 'رقم الجوال يجب أن يكون 9 أرقام على الأقل',
             'manager_name.min' => 'اسم المدير العام يجب أن يكون 3 أحرف على الأقل',
         ]);
+
+        if (!empty($validated['client_id'])) {
+            $client = Client::findOrFail($validated['client_id']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'تم اختيار بيانات الطرف الثاني بنجاح',
+                'client_id' => $client->id
+            ]);
+        }
 
         // Additional type checking
         if (!is_string($validated['name'])) {
