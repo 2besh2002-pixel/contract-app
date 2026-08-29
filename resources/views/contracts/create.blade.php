@@ -36,7 +36,11 @@
                 <header
                     class="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50/50 px-4 py-4 sm:px-6 sm:py-5">
                     <div class="flex flex-col-reverse items-center justify-between gap-4 md:flex-row">
-
+                        <!-- Logo -->
+                        <div class="flex h-16 w-36 shrink-0 items-center justify-center sm:h-20 sm:w-48">
+                            <img class="h-full w-full object-contain" src="{{ asset('images/new-logo1.png') }}"
+                                alt="أمر تم">
+                        </div>
                         <!-- Contract Details Box -->
                         <div
                             class="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/60 p-2.5 shadow-sm sm:gap-2.5 sm:p-3">
@@ -54,7 +58,8 @@
                             </div>
 
                             <div class="flex flex-col gap-1">
-                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">المدة (السنوات)</span>
+                                <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">المدة
+                                    (السنوات)</span>
                                 <input id="duration_years" name="duration_years" type="number" value="1"
                                     min="1" readonly
                                     class="w-16 sm:w-20 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1.5 text-center text-xs font-extrabold text-slate-800 outline-none">
@@ -81,13 +86,6 @@
                                     class="w-28 sm:w-32 rounded-lg border border-slate-200 bg-slate-100 px-2 py-1.5 text-center text-xs font-extrabold text-slate-800 outline-none">
                             </div>
 
-                        </div>
-
-                        <!-- Logo -->
-                        <div
-                            class="flex h-16 w-36 shrink-0 items-center justify-center sm:h-20 sm:w-48">
-                            <img class="h-full w-full object-contain" src="{{ asset('images/new-logo1.png') }}"
-                                alt="أمر تم">
                         </div>
 
                     </div>
